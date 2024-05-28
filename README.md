@@ -10,7 +10,7 @@ I'm learning the Remix framework so I created this project
 - [x] Create Index route template
 - [x] Add mock database
 - [x] Add loader to index route to show list of todos
-- [ ] Add action to index route to allow adding todos
+- [x] Add action to index route to allow adding todos
 - [ ] Add todo route to view todo items in a separate route
 - [ ] Add editing functionality
 - [ ] Add deleting functionality

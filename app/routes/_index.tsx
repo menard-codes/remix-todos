@@ -1,5 +1,6 @@
-import type { MetaFunction } from "@remix-run/node";
+import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { Form, json, Link, useLoaderData } from "@remix-run/react";
+import { useEffect, useRef } from "react";
 import { DB } from "~/data/db";
 
 export const meta: MetaFunction = () => {
@@ -15,8 +16,30 @@ export const loader = async () => {
   return json({data});
 }
 
+export const action = async ({ request }: LoaderFunctionArgs) => {
+  if (request.method.toLowerCase() === "post") {
+    const formData = await request.formData();
+    const task = formData.get("task");
+
+    if (task !== null && typeof task === "string") {
+      const db = new DB(process.cwd() + '/app/data/data.json');
+      await db.add(task);
+    }
+  }
+
+  // TODO: Add better response handling
+  return null;
+}
+
 export default function Index() {
   const { data } = useLoaderData<typeof loader>();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (inputRef.current?.value) {
+      inputRef.current.value = "";
+    }
+  }, [data]);
 
   return (
     <div className="min-h-screen">
@@ -27,6 +50,7 @@ export default function Index() {
             Enter a new task
           </label>
           <input
+            ref={inputRef}
             id="task"
             name="task"
             placeholder="Wash the dishes..."
