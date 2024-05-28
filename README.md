@@ -1,36 +1,18 @@
-# Welcome to Remix + Vite!
+# Remix Todos
 
-📖 See the [Remix docs](https://remix.run/docs) and the [Remix Vite docs](https://remix.run/docs/en/main/guides/vite) for details on supported features.
+## Background
 
-## Development
+I'm learning the Remix framework so I created this project
 
-Run the Vite dev server:
+## TODOS
 
-```shellscript
-npm run dev
-```
-
-## Deployment
-
-First, build your app for production:
-
-```sh
-npm run build
-```
-
-Then run the app in production mode:
-
-```sh
-npm start
-```
-
-Now you'll need to pick a host to deploy it to.
-
-### DIY
-
-If you're familiar with deploying Node applications, the built-in Remix app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-- `build/server`
-- `build/client`
+- [ ] Initial styling
+- [ ] Create Index route template
+- [ ] Add mock database
+- [ ] Add loader to index route to show list of todos
+- [ ] Add action to index route to allow adding todos
+- [ ] Add todo route to view todo items in a separate route
+- [ ] Add editing functionality
+- [ ] Add deleting functionality
+- [ ] Replace mock database with a real one
+- [ ] Host App
