@@ -17,8 +17,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body>
-        {children}
+      <body className="min-h-screen">
+        <main className="min-h-screen">
+          {children}
+        </main>
         <ScrollRestoration />
         <Scripts />
       </body>
