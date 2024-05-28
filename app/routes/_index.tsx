@@ -1,7 +1,7 @@
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { Form, json, Link, useLoaderData } from "@remix-run/react";
+import { Form, json, Link, useFetcher, useLoaderData } from "@remix-run/react";
 import { useEffect, useRef } from "react";
-import { DB } from "~/data/db";
+import { DB, Todo } from "~/data/db";
 
 export const meta: MetaFunction = () => {
   return [
@@ -34,6 +34,15 @@ export const action = async ({ request }: LoaderFunctionArgs) => {
 export default function Index() {
   const { data } = useLoaderData<typeof loader>();
   const inputRef = useRef<HTMLInputElement>(null);
+  const fetcher = useFetcher();
+  const updateTaskStatus = <T extends Todo>(status: "todo" | "done", id: T['id']) => {
+    const formData = new FormData();
+    formData.set('completed', status);
+    fetcher.submit(formData, {
+      method: "PUT",
+      action: `/todo/${id}`
+    })
+  };
 
   useEffect(() => {
     if (inputRef.current?.value) {
@@ -55,6 +64,7 @@ export default function Index() {
             name="task"
             placeholder="Wash the dishes..."
             className="bg-zinc-200 px-3 py-1 rounded min-w-full"
+            required
           />
         </div>
         <button className="block bg-slate-900 hover:bg-slate-600 text-slate-100 px-3 py-1 rounded-lg">Add</button>
@@ -76,19 +86,21 @@ export default function Index() {
                 <Link to={`/todo/${id}`} key={id} className="underline hover:decoration-blue-700">
                   <span className={`hover:text-blue-700 ${completed ? "line-through italic text-zinc-500" : ""}`}>{task}</span>
                 </Link>
-                <Form action={`/todo/${id}`} method="PUT">
-                  {
-                    completed
-                      ? <>
-                          <input hidden type="checkbox" name="completed" defaultChecked />
-                          <button className=" bg-green-600 hover:bg-green-500 text-green-50 px-4 py-1 rounded-md text-sm flex items-center">DONE</button>
-                        </>
-                      : <>
-                          <input hidden type="checkbox" name="completed" />
-                          <button className=" bg-zinc-600 hover:bg-zinc-500 text-zinc-50 px-4 py-1 rounded-md text-sm flex items-center">TODO</button>
-                        </>
-                  }
-                </Form>
+                {
+                  completed
+                    ? <button
+                        className=" bg-green-600 hover:bg-green-500 text-green-50 px-4 py-1 rounded-md text-sm flex items-center"
+                        onClick={() => updateTaskStatus("todo", id)}
+                      >
+                        DONE
+                      </button>
+                    : <button
+                      className=" bg-zinc-600 hover:bg-zinc-500 text-zinc-50 px-4 py-1 rounded-md text-sm flex items-center"
+                      onClick={() => updateTaskStatus("done", id)}
+                    >
+                      TODO
+                    </button>
+                }
               </li>
           ))
         }
