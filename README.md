@@ -6,7 +6,7 @@ I'm learning the Remix framework so I created this project
 
 ## TODOS
 
-- [ ] Initial styling
+- [x] Initial styling
 - [ ] Create Index route template
 - [ ] Add mock database
 - [ ] Add loader to index route to show list of todos
