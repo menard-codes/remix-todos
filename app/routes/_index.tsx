@@ -1,5 +1,6 @@
 import type { MetaFunction } from "@remix-run/node";
-import { Form, Link } from "@remix-run/react";
+import { Form, json, Link, useLoaderData } from "@remix-run/react";
+import { DB } from "~/data/db";
 
 export const meta: MetaFunction = () => {
   return [
@@ -8,24 +9,14 @@ export const meta: MetaFunction = () => {
   ];
 };
 
+export const loader = async () => {
+  const db = new DB(process.cwd() + "/app/data/data.json");
+  const data = await db.getAll();
+  return json({data});
+}
+
 export default function Index() {
-  const data = [
-    {
-      id: "111",
-      task: "Wash the dishes",
-      completed: false
-    },
-    {
-      id: "112",
-      task: "Buy groceries",
-      completed: true
-    },
-    {
-      id: "113",
-      task: "Walk the dog",
-      completed: true
-    }
-  ];
+  const { data } = useLoaderData<typeof loader>();
 
   return (
     <div className="min-h-screen">
