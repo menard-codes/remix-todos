@@ -66,11 +66,11 @@ export default function Index() {
                     completed
                       ? <>
                           <input hidden name="completed" value="done" />
-                          <button className=" bg-green-600 text-green-50 px-4 py-1 rounded-md text-sm flex items-center">DONE</button>
+                          <button className=" bg-green-600 hover:bg-green-500 text-green-50 px-4 py-1 rounded-md text-sm flex items-center">DONE</button>
                         </>
                       : <>
                           <input hidden name="completed" value="todo" />
-                          <button className=" bg-zinc-600 text-zinc-50 px-4 py-1 rounded-md text-sm flex items-center">TODO</button>
+                          <button className=" bg-zinc-600 hover:bg-zinc-500 text-zinc-50 px-4 py-1 rounded-md text-sm flex items-center">TODO</button>
                         </>
                   }
                 </Form>
