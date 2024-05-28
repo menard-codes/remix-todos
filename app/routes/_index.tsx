@@ -50,21 +50,31 @@ export default function Index() {
       <ul className="max-w-96 mx-auto grid gap-2">
         {
           data.map(({ id, task, completed }) => (
-            <Link to={`/todo/${id}`} key={id}>
+            
               <li
                 className="
-                  border-2 border-solid border-zinc-500 hover:bg-zinc-200 px-4 py-2 rounded-md flex justify-between hover:scale-105
+                  border-2 border-solid border-zinc-500 hover:bg-zinc-200 px-4 py-2 rounded-md flex justify-between
                   transition-transform duration-100 ease-in
                 "
+                key={id}
               >
-                <span>{task}</span>
-                {
-                  completed
-                    ? <span className=" bg-green-600 text-green-50 px-4 rounded-md text-sm flex items-center">DONE</span>
-                    : <span className=" bg-zinc-600 text-zinc-50 px-4 rounded-md text-sm flex items-center">TODO</span>
-                }
+                <Link to={`/todo/${id}`} key={id} className="underline hover:decoration-blue-700">
+                  <span className={`hover:text-blue-700 ${completed ? "line-through italic text-zinc-500" : ""}`}>{task}</span>
+                </Link>
+                <Form action={`/todo/${id}`} method="PUT">
+                  {
+                    completed
+                      ? <>
+                          <input hidden name="completed" value="done" />
+                          <button className=" bg-green-600 text-green-50 px-4 py-1 rounded-md text-sm flex items-center">DONE</button>
+                        </>
+                      : <>
+                          <input hidden name="completed" value="todo" />
+                          <button className=" bg-zinc-600 text-zinc-50 px-4 py-1 rounded-md text-sm flex items-center">TODO</button>
+                        </>
+                  }
+                </Form>
               </li>
-            </Link>
           ))
         }
       </ul>
