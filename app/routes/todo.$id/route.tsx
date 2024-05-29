@@ -1,6 +1,6 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node"
-import { useLoaderData, Form, useNavigate } from "@remix-run/react";
-import { DB } from "~/data/db";
+import { useLoaderData, Form, useNavigate, redirect } from "@remix-run/react";
+import { deleteTodo, editTodo, getTodo } from "./adapters";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
     const todoId = params?.id;
@@ -10,8 +10,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
         throw new Error('No `id` param present');
     }
 
-    const db = new DB(process.cwd() + '/app/data/data.json');
-    const data = await db.get(todoId);
+    const data = await getTodo(todoId);
     return json({data});
 }
 
@@ -23,25 +22,16 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
         throw new Error('No `id` param present');
     }
 
-    if (request.method.toLowerCase() === "put") {
-        const formData = await request.formData();
-        const formObject = JSON.parse(JSON.stringify(Object.fromEntries(formData)));
-        switch (formObject.completed) {
-            case "todo":
-                formObject.completed = false;
-                break;
-            case "done":
-                formObject.completed = true;
-                break;
-            default:
-                // TODO: Better response handling
-                throw new Error("Unknown value of `completed`");
+    switch (request.method.toLowerCase()) {
+        case "put": {
+            const formData = await request.formData();
+            await editTodo(formData, todoId);
+            // TODO: Better response handling
+            return {message: "Success"};
+        } case "delete": {
+            await deleteTodo(todoId);
+            return redirect('/');
         }
-        
-        const db = new DB(process.cwd() + '/app/data/data.json');
-        await db.edit(todoId, formObject);
-        // TODO: Better response handling
-        return {message: "Success"};
     }
     
     // TODO: Should have a better response handling
@@ -84,7 +74,10 @@ export default function TodoItem() {
                             <option value="todo">TODO</option>
                         </select>
                     </div>
-                    <button className="px-4 py-2 mt-4 bg-zinc-500 text-zinc-50 rounded-xl">Save</button>
+                    <button className="py-2 mt-4 bg-zinc-500 text-zinc-50 rounded-xl">Save</button>
+                </Form>
+                <Form method="DELETE">
+                    <button className="bg-red-600 text-white w-full mt-4 py-2 rounded-xl">Delete</button>
                 </Form>
             </div>
         </div>
